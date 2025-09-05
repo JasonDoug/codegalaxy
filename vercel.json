@@ -1,0 +1,15 @@
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "functions": {
+    "src/app/**": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "NEXT_PUBLIC_GITHUB_TOKEN": "@github_token",
+    "NEXT_PUBLIC_GITHUB_USERNAME": "@github_username"
+  }
+}
