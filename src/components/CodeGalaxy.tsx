@@ -1,87 +1,35 @@
 'use client';
 
-import { useRef, useState, useMemo } from 'react';
+import { useRef, useState, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Float, Text, Sphere, Ring } from '@react-three/drei';
 import { Vector3, Group, Color } from 'three';
 import * as THREE from 'three';
+import { useGitHubData } from '@/hooks/useGitHubData';
+import { mockRepositories } from '@/lib/mockData';
 import type { Repository } from '@/types/repository';
-
-// Mock repository data - in a real implementation, this would come from GitHub API
-const mockRepositories: Repository[] = [
-  {
-    id: 1,
-    name: 'neural-network-visualizer',
-    language: 'JavaScript',
-    stars: 247,
-    size: 15680,
-    description: 'Interactive 3D neural network visualization tool',
-    position: [0, 0, 0],
-    color: '#f7df1e',
-    commits: 89,
-    lastActive: '2 days ago'
-  },
-  {
-    id: 2,
-    name: 'quantum-chess',
-    language: 'Python',
-    stars: 1240,
-    size: 8950,
-    description: 'Chess with quantum mechanics principles',
-    position: [5, 2, -3],
-    color: '#3776ab',
-    commits: 156,
-    lastActive: '1 week ago'
-  },
-  {
-    id: 3,
-    name: 'blockchain-explorer',
-    language: 'TypeScript',
-    stars: 892,
-    size: 23400,
-    description: 'Advanced blockchain transaction explorer',
-    position: [-4, -1, 2],
-    color: '#3178c6',
-    commits: 203,
-    lastActive: '3 days ago'
-  },
-  {
-    id: 4,
-    name: 'ai-music-composer',
-    language: 'Python',
-    stars: 567,
-    size: 12800,
-    description: 'AI-powered music composition engine',
-    position: [2, -3, 4],
-    color: '#3776ab',
-    commits: 134,
-    lastActive: '5 days ago'
-  },
-  {
-    id: 5,
-    name: 'react-3d-portfolio',
-    language: 'TypeScript',
-    stars: 423,
-    size: 18900,
-    description: 'This revolutionary 3D portfolio you are experiencing',
-    position: [-3, 3, -2],
-    color: '#3178c6',
-    commits: 67,
-    lastActive: 'now'
-  }
-];
 
 
 interface RepositoryPlanetProps {
   repository: Repository;
   onClick: (repo: Repository) => void;
   isSelected: boolean;
+  allRepositories: Repository[];
+  clearAllStatsTrigger: number;
 }
 
-function RepositoryPlanet({ repository, onClick, isSelected }: RepositoryPlanetProps) {
+function RepositoryPlanet({ repository, onClick, isSelected, allRepositories, clearAllStatsTrigger }: RepositoryPlanetProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const groupRef = useRef<Group>(null);
   const [hovered, setHovered] = useState(false);
+  const [showFloatingStats, setShowFloatingStats] = useState(false);
+
+  // Clear floating stats when global clear is triggered
+  useEffect(() => {
+    if (clearAllStatsTrigger > 0) {
+      setShowFloatingStats(false);
+    }
+  }, [clearAllStatsTrigger]);
   
   // Calculate planet size based on repository metrics
   const planetSize = useMemo(() => {
@@ -116,6 +64,15 @@ function RepositoryPlanet({ repository, onClick, isSelected }: RepositoryPlanetP
   });
   
   const languageColor = new Color(repository.color);
+
+  // Handle single click (floating stats) vs double click (modal)
+  const handleSingleClick = () => {
+    setShowFloatingStats(!showFloatingStats);
+  };
+
+  const handleDoubleClick = () => {
+    onClick(repository);
+  };
   
   return (
     <group 
@@ -133,7 +90,8 @@ function RepositoryPlanet({ repository, onClick, isSelected }: RepositoryPlanetP
           args={[planetSize, 32, 32]}
           onPointerOver={() => setHovered(true)}
           onPointerOut={() => setHovered(false)}
-          onClick={() => onClick(repository)}
+          onClick={handleSingleClick}
+          onDoubleClick={handleDoubleClick}
         >
           <meshPhysicalMaterial
             color={languageColor}
@@ -151,7 +109,7 @@ function RepositoryPlanet({ repository, onClick, isSelected }: RepositoryPlanetP
           <Ring
             key={i}
             args={[ringRadius + i * 0.2, ringRadius + i * 0.2 + 0.02, 64]}
-            rotation={[Math.PI / 2, 0, i * Math.PI / 3]}
+            rotation={[Math.PI / 4, i * Math.PI / 6, i * Math.PI / 3]}
           >
             <meshBasicMaterial
               color={languageColor}
@@ -161,23 +119,31 @@ function RepositoryPlanet({ repository, onClick, isSelected }: RepositoryPlanetP
           </Ring>
         ))}
         
-        {/* Repository name floating above */}
-        {(hovered || isSelected) && (
+        {/* Repository name when hovered (only if not showing floating stats) */}
+        {hovered && !showFloatingStats && (
           <Text
             position={[0, planetSize + 1, 0]}
             fontSize={0.3}
             color="white"
             anchorX="center"
             anchorY="middle"
-            font="/fonts/inter.woff"
           >
             {repository.name}
           </Text>
         )}
         
-        {/* Stats display when selected */}
-        {isSelected && (
+        {/* Floating stats when clicked (single-click) */}
+        {showFloatingStats && (
           <>
+            <Text
+              position={[0, planetSize + 1, 0]}
+              fontSize={0.3}
+              color="white"
+              anchorX="center"
+              anchorY="middle"
+            >
+              {repository.name}
+            </Text>
             <Text
               position={[0, planetSize + 1.5, 0]}
               fontSize={0.15}
@@ -200,40 +166,44 @@ function RepositoryPlanet({ repository, onClick, isSelected }: RepositoryPlanetP
         )}
       </Float>
       
-      {/* Connection lines to other repositories (gravitational relationships) */}
-      {hovered && (
-        mockRepositories
-          .filter(repo => repo.id !== repository.id && repo.language === repository.language)
-          .slice(0, 2)
-          .map(connectedRepo => {
-            const start = new Vector3(...repository.position as [number, number, number]);
-            const end = new Vector3(...connectedRepo.position as [number, number, number]);
-            // const distance = start.distanceTo(end);
-            // const midPoint = start.clone().add(end).divideScalar(2);
-            
-            const points = [start, end];
-            const geometry = new THREE.BufferGeometry().setFromPoints(points);
-            
-            return (
-              <primitive key={connectedRepo.id} object={new THREE.Line(geometry, new THREE.LineBasicMaterial({ 
-                color: repository.color, 
-                transparent: true, 
-                opacity: 0.3 
-              }))} />
-            );
-          })
-      )}
     </group>
   );
 }
 
 interface CodeGalaxyProps {
   onRepositorySelect?: (repository: Repository | null) => void;
+  onDeveloperCoreClick?: () => void;
 }
 
-export function CodeGalaxy({ onRepositorySelect }: CodeGalaxyProps) {
+export function CodeGalaxy({ onRepositorySelect, onDeveloperCoreClick }: CodeGalaxyProps) {
   const [selectedRepository, setSelectedRepository] = useState<Repository | null>(null);
+  const [clearAllStats, setClearAllStats] = useState(0); // Trigger to clear all floating stats
   const galaxyRef = useRef<Group>(null);
+  const { repositories, isLoading, error, userStats, isConnected } = useGitHubData();
+  
+  // Use mock data when not connected, real data when connected
+  const displayRepositories = isConnected ? repositories : mockRepositories;
+  
+  // Debug logging
+  console.log('CodeGalaxy render:', { 
+    repositoriesCount: displayRepositories.length, 
+    isLoading, 
+    error, 
+    isConnected,
+    usingMockData: !isConnected 
+  });
+
+  // Keyboard shortcut to clear all floating stats (Escape key)
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setClearAllStats(prev => prev + 1); // Increment to trigger clear
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
   
   useFrame(() => {
     if (galaxyRef.current) {
@@ -246,12 +216,83 @@ export function CodeGalaxy({ onRepositorySelect }: CodeGalaxyProps) {
     setSelectedRepository(newSelection);
     onRepositorySelect?.(newSelection);
   };
+
+  // Show loading state or error if needed
+  if (isLoading) {
+    return (
+      <group ref={galaxyRef}>
+        <Float speed={1} rotationIntensity={1} floatIntensity={1}>
+          <Sphere args={[0.5, 16, 16]} position={[0, 0, 0]}>
+            <meshPhysicalMaterial
+              color="#8b5cf6"
+              emissive="#8b5cf6"
+              emissiveIntensity={0.8}
+              roughness={0}
+              metalness={1}
+            />
+          </Sphere>
+          <Text
+            position={[0, -1.5, 0]}
+            fontSize={0.3}
+            color="white"
+            anchorX="center"
+            anchorY="middle"
+          >
+            Loading Galaxy...
+          </Text>
+        </Float>
+      </group>
+    );
+  }
+
+  if (error) {
+    return (
+      <group ref={galaxyRef}>
+        <Float speed={0.5} rotationIntensity={0.2} floatIntensity={0.5}>
+          <Sphere args={[0.3, 16, 16]} position={[0, 0, 0]}>
+            <meshPhysicalMaterial
+              color="#ef4444"
+              emissive="#ef4444"
+              emissiveIntensity={0.3}
+              roughness={0.5}
+              metalness={0.5}
+            />
+          </Sphere>
+          <Text
+            position={[0, -1.2, 0]}
+            fontSize={0.2}
+            color="#ef4444"
+            anchorX="center"
+            anchorY="middle"
+            maxWidth={8}
+          >
+            {error}
+          </Text>
+          <Text
+            position={[0, -1.8, 0]}
+            fontSize={0.15}
+            color="#94a3b8"
+            anchorX="center"
+            anchorY="middle"
+          >
+            Check System Config
+          </Text>
+        </Float>
+      </group>
+    );
+  }
   
   return (
     <group ref={galaxyRef}>
       {/* Central core representing the developer */}
       <Float speed={0.5} rotationIntensity={0.2} floatIntensity={0.5}>
-        <Sphere args={[0.3, 16, 16]} position={[0, 0, 0]}>
+        <Sphere 
+          args={[0.3, 16, 16]} 
+          position={[0, 0, 0]}
+          onClick={onDeveloperCoreClick}
+          onPointerOver={() => document.body.style.cursor = 'pointer'}
+          onPointerOut={() => document.body.style.cursor = 'default'}
+        >
           <meshPhysicalMaterial
             color="#8b5cf6"
             emissive="#8b5cf6"
@@ -268,19 +309,20 @@ export function CodeGalaxy({ onRepositorySelect }: CodeGalaxyProps) {
           color="white"
           anchorX="center"
           anchorY="middle"
-          font="/fonts/inter.woff"
         >
           DEVELOPER CORE
         </Text>
       </Float>
       
       {/* Repository planets */}
-      {mockRepositories.map(repository => (
+      {displayRepositories.map(repository => (
         <RepositoryPlanet
           key={repository.id}
           repository={repository}
           onClick={handleRepositoryClick}
           isSelected={selectedRepository?.id === repository.id}
+          allRepositories={displayRepositories}
+          clearAllStatsTrigger={clearAllStats}
         />
       ))}
       

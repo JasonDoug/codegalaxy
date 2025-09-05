@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Github, Code, Star, GitBranch, Activity, ExternalLink } from 'lucide-react';
+import { useGitHubData } from '@/hooks/useGitHubData';
+import { LANGUAGE_COLORS } from '@/lib/github';
+import { mockUserStats } from '@/lib/mockData';
 
 interface DeveloperStats {
   totalRepos: number;
@@ -29,18 +32,61 @@ const mockStats: DeveloperStats = {
 
 export function DeveloperHUD() {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [codeActivity, setCodeActivity] = useState(0);
+  const { repositories, userStats, isLoading, isConnected } = useGitHubData();
 
   useEffect(() => {
+    // Set initial time on client
+    setCurrentTime(new Date());
+    
     const timer = setInterval(() => {
       setCurrentTime(new Date());
-      // Simulate code activity fluctuation
-      setCodeActivity(Math.random() * 100);
-    }, 1000);
+      // Calculate activity based on recent repositories
+      const recentRepos = repositories.filter(repo => 
+        repo.lastActive.includes('day') || repo.lastActive === 'today' || repo.lastActive === 'yesterday'
+      );
+      const activityScore = Math.min(100, (recentRepos.length / repositories.length) * 100 + 20);
+      setCodeActivity(activityScore);
+    }, 2000); // Update every 2 seconds instead of 1
 
     return () => clearInterval(timer);
-  }, []);
+  }, [repositories]);
+
+  // Use mock data when not connected, real data when connected
+  const stats: DeveloperStats = isConnected && userStats ? {
+    totalRepos: userStats.totalRepos,
+    totalStars: userStats.totalStars,
+    totalCommits: repositories.reduce((sum, repo) => sum + repo.commits, 0),
+    activeProjects: repositories.filter(repo => repo.lastActive.includes('day') || repo.lastActive === 'today').length,
+    languages: Object.entries(userStats.languages)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 5)
+      .map(([name, size], index, arr) => {
+        const totalSize = arr.reduce((sum, [,s]) => sum + s, 0);
+        return {
+          name,
+          percentage: Math.round((size / totalSize) * 100),
+          color: LANGUAGE_COLORS[name] || LANGUAGE_COLORS.default
+        };
+      })
+  } : {
+    totalRepos: mockStats.totalRepos,
+    totalStars: mockStats.totalStars,
+    totalCommits: mockStats.totalCommits,
+    activeProjects: mockStats.activeProjects,
+    languages: Object.entries(mockUserStats.languages)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 5)
+      .map(([name, size], index, arr) => {
+        const totalSize = arr.reduce((sum, [,s]) => sum + s, 0);
+        return {
+          name,
+          percentage: Math.round((size / totalSize) * 100),
+          color: LANGUAGE_COLORS[name] || LANGUAGE_COLORS.default
+        };
+      })
+  };
 
   return (
     <>
@@ -73,7 +119,7 @@ export function DeveloperHUD() {
                 <Github size={14} className="text-purple-400" />
                 <span className="text-xs text-gray-400">REPOS</span>
               </div>
-              <div className="text-xl font-bold text-white">{mockStats.totalRepos}</div>
+              <div className="text-xl font-bold text-white">{stats.totalRepos}</div>
             </div>
             
             <div className="bg-slate-900/50 rounded-lg p-3">
@@ -81,7 +127,7 @@ export function DeveloperHUD() {
                 <Star size={14} className="text-yellow-400" />
                 <span className="text-xs text-gray-400">STARS</span>
               </div>
-              <div className="text-xl font-bold text-white">{mockStats.totalStars.toLocaleString()}</div>
+              <div className="text-xl font-bold text-white">{stats.totalStars.toLocaleString()}</div>
             </div>
             
             <div className="bg-slate-900/50 rounded-lg p-3">
@@ -89,7 +135,7 @@ export function DeveloperHUD() {
                 <GitBranch size={14} className="text-green-400" />
                 <span className="text-xs text-gray-400">COMMITS</span>
               </div>
-              <div className="text-xl font-bold text-white">{mockStats.totalCommits.toLocaleString()}</div>
+              <div className="text-xl font-bold text-white">{stats.totalCommits.toLocaleString()}</div>
             </div>
             
             <div className="bg-slate-900/50 rounded-lg p-3">
@@ -97,7 +143,7 @@ export function DeveloperHUD() {
                 <Code size={14} className="text-cyan-400" />
                 <span className="text-xs text-gray-400">ACTIVE</span>
               </div>
-              <div className="text-xl font-bold text-white">{mockStats.activeProjects}</div>
+              <div className="text-xl font-bold text-white">{stats.activeProjects}</div>
             </div>
           </div>
           
@@ -131,7 +177,7 @@ export function DeveloperHUD() {
                   <span className="text-xs text-gray-400 font-mono">LANGUAGE DISTRIBUTION</span>
                 </div>
                 
-                {mockStats.languages.map((lang, index) => (
+                {stats.languages.map((lang, index) => (
                   <motion.div
                     key={lang.name}
                     initial={{ opacity: 0, x: 20 }}
@@ -164,15 +210,15 @@ export function DeveloperHUD() {
       >
         <div className="bg-black/20 backdrop-blur-md border border-blue-500/30 rounded-xl p-4">
           <div className="text-2xl font-mono text-white mb-1">
-            {currentTime.toLocaleTimeString()}
+            {currentTime ? currentTime.toLocaleTimeString() : '--:--:--'}
           </div>
           <div className="text-sm text-blue-300">
-            {currentTime.toLocaleDateString('en-US', { 
+            {currentTime ? currentTime.toLocaleDateString('en-US', { 
               weekday: 'long', 
               year: 'numeric', 
               month: 'long', 
               day: 'numeric' 
-            })}
+            }) : 'Loading...'}
           </div>
         </div>
       </motion.div>

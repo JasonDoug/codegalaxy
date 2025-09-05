@@ -5,7 +5,9 @@
  * and transform it into the immersive 3D visualization format.
  */
 
-export interface Repository {
+import type { Repository } from '@/types/repository';
+
+export interface GitHubRepository {
   id: number;
   name: string;
   full_name: string;
@@ -74,7 +76,7 @@ export const LANGUAGE_COLORS: { [key: string]: string } = {
   'default': '#8b5cf6'
 };
 
-class GitHubAPI {
+export class GitHubAPI {
   private baseURL = 'https://api.github.com';
   private token: string | null = null;
 
@@ -89,7 +91,7 @@ class GitHubAPI {
     };
 
     if (this.token) {
-      headers['Authorization'] = `token ${this.token}`;
+      headers['Authorization'] = `Bearer ${this.token}`;
     }
 
     const response = await fetch(`${this.baseURL}${endpoint}`, {
@@ -98,7 +100,16 @@ class GitHubAPI {
     });
 
     if (!response.ok) {
-      throw new Error(`GitHub API Error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text().catch(() => 'Unknown error');
+      console.error('GitHub API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        endpoint,
+        hasToken: !!this.token,
+        tokenPrefix: this.token?.substring(0, 10) + '...',
+        error: errorText
+      });
+      throw new Error(`GitHub API Error: ${response.status} ${response.statusText} - ${errorText}`);
     }
 
     return response.json();
@@ -113,7 +124,7 @@ class GitHubAPI {
     direction?: 'asc' | 'desc';
     per_page?: number;
     type?: 'owner' | 'member' | 'all';
-  }): Promise<Repository[]> {
+  }): Promise<GitHubRepository[]> {
     const params = new URLSearchParams({
       sort: options?.sort || 'updated',
       direction: options?.direction || 'desc',
@@ -121,7 +132,7 @@ class GitHubAPI {
       type: options?.type || 'owner'
     });
 
-    return this.makeRequest<Repository[]>(`/users/${username}/repos?${params}`);
+    return this.makeRequest<GitHubRepository[]>(`/users/${username}/repos?${params}`);
   }
 
   async getRepositoryLanguages(username: string, repoName: string): Promise<{ [key: string]: number }> {
@@ -143,20 +154,7 @@ class GitHubAPI {
   /**
    * Transform repository data for 3D visualization
    */
-  transformRepositoryFor3D(repos: Repository[], index: number): {
-    id: number;
-    name: string;
-    language: string;
-    stars: number;
-    size: number;
-    description: string;
-    position: [number, number, number];
-    color: string;
-    commits: number;
-    lastActive: string;
-    topics: string[];
-    url: string;
-  } {
+  transformRepositoryFor3D(repos: GitHubRepository[], index: number): Repository {
     const repo = repos[index];
     
     // Generate 3D position based on repository characteristics
@@ -191,7 +189,7 @@ class GitHubAPI {
       description: repo.description || 'No description available',
       position,
       color: LANGUAGE_COLORS[repo.language] || LANGUAGE_COLORS.default,
-      commits: Math.floor(Math.random() * 200) + 10, // Placeholder - would need separate API call
+      commits: 0, // Will be fetched separately for real data
       lastActive: lastActiveText,
       topics: repo.topics || [],
       url: repo.html_url

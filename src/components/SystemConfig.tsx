@@ -163,7 +163,7 @@ export function SystemConfig({ isOpen, onClose }: SystemConfigProps) {
               {/* Help Text */}
               <div className="bg-blue-950/30 border border-blue-500/30 rounded-lg p-3">
                 <p className="text-sm text-blue-300 mb-2">
-                  Need a GitHub token? Create one with 'public_repo' permissions:
+                  Need a GitHub token? Create one with &apos;public_repo&apos; permissions:
                 </p>
                 <a
                   href="https://github.com/settings/tokens/new?description=Portfolio%20App&scopes=public_repo"
