@@ -20,8 +20,8 @@ export function SystemConfig({ isOpen, onClose }: SystemConfigProps) {
   // Load current values from localStorage and environment
   useEffect(() => {
     if (isOpen) {
-      const savedToken = localStorage.getItem('github_token') || '';
-      const savedUsername = localStorage.getItem('github_username') || 
+      const savedToken = sessionStorage.getItem('github_token') || '';
+      const savedUsername = sessionStorage.getItem('github_username') || 
                            process.env.NEXT_PUBLIC_GITHUB_USERNAME || '';
       
       setGithubToken(savedToken);
@@ -49,15 +49,17 @@ export function SystemConfig({ isOpen, onClose }: SystemConfigProps) {
     setConnectionStatus('idle');
 
     try {
-      const response = await fetch(`https://api.github.com/users/${githubUsername}`, {
+      const response = await fetch('https://api.github.com/user', {
         headers: {
-          'Authorization': `token ${githubToken}`,
+          'Authorization': `Bearer ${githubToken}`,
           'Accept': 'application/vnd.github.v3+json'
         }
       });
 
       if (response.ok) {
-        setConnectionStatus('success');
+        const data = await response.json();
+        const matches = data?.login?.toLowerCase() === githubUsername.trim().toLowerCase();
+        setConnectionStatus(matches ? 'success' : 'error');
       } else {
         setConnectionStatus('error');
       }
@@ -69,8 +71,8 @@ export function SystemConfig({ isOpen, onClose }: SystemConfigProps) {
   };
 
   const saveConfiguration = () => {
-    localStorage.setItem('github_token', githubToken);
-    localStorage.setItem('github_username', githubUsername);
+    sessionStorage.setItem('github_token', githubToken);
+    sessionStorage.setItem('github_username', githubUsername);
     setHasUnsavedChanges(false);
     
     // Trigger a page reload to apply the new configuration
@@ -78,8 +80,8 @@ export function SystemConfig({ isOpen, onClose }: SystemConfigProps) {
   };
 
   const clearConfiguration = () => {
-    localStorage.removeItem('github_token');
-    localStorage.removeItem('github_username');
+    sessionStorage.removeItem('github_token');
+    sessionStorage.removeItem('github_username');
     setGithubToken('');
     setGithubUsername('');
     setHasUnsavedChanges(true);
@@ -163,7 +165,7 @@ export function SystemConfig({ isOpen, onClose }: SystemConfigProps) {
               {/* Help Text */}
               <div className="bg-blue-950/30 border border-blue-500/30 rounded-lg p-3">
                 <p className="text-sm text-blue-300 mb-2">
-                  Need a GitHub token? Create one with 'public_repo' permissions:
+                  Need a GitHub token? Create one with &apos;public_repo&apos; permissions:
                 </p>
                 <a
                   href="https://github.com/settings/tokens/new?description=Portfolio%20App&scopes=public_repo"
