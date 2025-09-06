@@ -1,36 +1,283 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌌 Code Galaxy - 3D Developer Portfolio Template
 
-## Getting Started
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/JasonDoug/codegalaxy&env=NEXT_PUBLIC_GITHUB_TOKEN,NEXT_PUBLIC_GITHUB_USERNAME&envDescription=GitHub%20API%20credentials%20for%20fetching%20your%20repository%20data&envLink=https://github.com/JasonDoug/codegalaxy#-environment-setup)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
+[![Three.js](https://img.shields.io/badge/Three.js-WebGL-red)](https://threejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-First, run the development server:
+> 🚀 **Revolutionary 3D Developer Portfolio Template** - Transform your GitHub repositories into an interactive 3D galaxy where each repo exists as an explorable planet in space.
+
+## ✨ Features
+
+### 🌟 Core Experience
+- **🪐 3D Repository Visualization** - Your repos become planets with sizes based on stars and activity
+- **🔄 Real-time GitHub Integration** - Live data from your actual repositories
+- **🎮 Interactive Navigation** - Orbit controls, zoom, and click-to-explore functionality
+- **📱 Fully Responsive** - Optimized experience across all devices
+- **🌙 Immersion Mode** - Press `F` to hide UI for distraction-free viewing
+
+### 🎛️ Advanced Controls
+- **Single-click planets** → Show floating repository stats
+- **Double-click planets** → Open detailed repository modal  
+- **Click Developer Core** → View your GitHub profile
+- **ESC key** → Clear all floating stats
+- **F key** → Toggle immersion mode
+
+### 🔧 Technical Features
+- **⚡ Next.js 15** with App Router and TypeScript
+- **🎨 Three.js + React Three Fiber** for 3D graphics
+- **🎭 Framer Motion** for cinematic animations
+- **🎨 Tailwind CSS 4** for modern styling
+- **🔒 Security-first** approach with sessionStorage
+- **📊 Smart Data Visualization** with language-based color coding
+
+## 🚀 Quick Start
+
+### 1️⃣ Use This Template
+
+```bash
+# Option A: Use GitHub Template
+Click "Use this template" button above
+
+# Option B: Clone directly  
+git clone https://github.com/JasonDoug/codegalaxy.git my-portfolio
+cd my-portfolio
+npm install
+```
+
+### 2️⃣ Environment Setup
+
+Create a `.env.local` file:
+
+```bash
+NEXT_PUBLIC_GITHUB_USERNAME=your-github-username
+NEXT_PUBLIC_GITHUB_TOKEN=your-github-token
+```
+
+**Get Your GitHub Token:**
+1. Go to [GitHub Settings → Developer settings → Personal access tokens](https://github.com/settings/personal-access-tokens/new)
+2. Create a **fine-grained token** with read-only access to public repositories
+3. Or create a **classic token** with `public_repo` scope
+
+### 3️⃣ Launch Your Galaxy
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to explore your Code Galaxy! 🌌
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4️⃣ Configure Through UI (Optional)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Click the gear icon → System Config
+2. Enter your GitHub credentials
+3. Test connection and save
+4. Enjoy your personalized 3D portfolio!
 
-## Learn More
+## 🎨 Customization
 
-To learn more about Next.js, take a look at the following resources:
+### 🌈 Themes & Colors
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Language Colors** (`src/lib/github.ts`):
+```typescript
+export const LANGUAGE_COLORS = {
+  JavaScript: '#f7df1e',
+  TypeScript: '#3178c6',
+  Python: '#3776ab',
+  // Add your languages here
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Galaxy Background** (`src/app/page.tsx`):
+```typescript
+className="bg-gradient-to-b from-slate-950 via-purple-950 to-slate-900"
+```
 
-## Deploy on Vercel
+### 🪐 Repository Display
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Planet Sizing Algorithm** (`src/lib/github.ts`):
+```typescript
+// Customize how repository metrics affect planet sizes
+const baseSize = Math.max(0.5, Math.min(2, stars / 200 + size / 10000));
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Orbital Positioning** (`src/lib/github.ts`):
+```typescript
+// Modify 3D positioning algorithm
+transformRepositoryFor3D(repositories, index)
+```
+
+### 🎭 UI Components
+
+- **Welcome Message**: `src/app/page.tsx` 
+- **Developer HUD**: `src/components/DeveloperHUD.tsx`
+- **Repository Modals**: `src/components/RepositoryDetail.tsx`
+- **GitHub Profile**: `src/components/GitHubProfile.tsx`
+
+## 📦 Deployment
+
+### Vercel (Recommended)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/JasonDoug/codegalaxy)
+
+1. Click deploy button above
+2. Connect your GitHub account
+3. Add environment variables
+4. Deploy instantly!
+
+### Other Platforms
+
+**Netlify:**
+```bash
+npm run build
+npm run export  # Static export
+```
+
+**Docker:**
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+CMD ["npm", "start"]
+```
+
+## 🛠️ Development
+
+### Commands
+
+```bash
+npm run dev      # Start development server
+npm run build    # Build for production  
+npm run start    # Start production server
+npm run lint     # Run ESLint
+```
+
+### Project Structure
+
+```
+src/
+├── app/                 # Next.js App Router
+│   ├── page.tsx        # Main galaxy interface
+│   └── globals.css     # Global styles
+├── components/         # React components
+│   ├── CodeGalaxy.tsx  # 3D visualization core
+│   ├── DeveloperHUD.tsx # Statistics overlay
+│   └── *.tsx           # Other UI components
+├── lib/               # Utilities & API
+│   ├── github.ts      # GitHub API integration
+│   └── mockData.ts    # Fallback demo data
+├── hooks/             # Custom React hooks
+└── types/             # TypeScript definitions
+```
+
+### Key Technologies
+
+- **Frontend**: Next.js 15, React 19, TypeScript 5
+- **3D Graphics**: Three.js, React Three Fiber, React Three Drei
+- **Styling**: Tailwind CSS 4, Framer Motion
+- **API**: GitHub REST API with Bearer authentication
+- **Icons**: Lucide React
+
+## 🎮 Interactive Guide
+
+### Controls
+| Input | Action |
+|-------|--------|
+| `Mouse Drag` | Orbit around galaxy |
+| `Mouse Wheel` | Zoom in/out |
+| `Single Click Planet` | Toggle floating stats |
+| `Double Click Planet` | Open repository details |
+| `Click Developer Core` | View GitHub profile |
+| `ESC` | Clear all floating stats |
+| `F` | Toggle immersion mode |
+
+### Navigation Tips
+- **Explore freely** - The galaxy rotates slowly automatically
+- **Use immersion mode** for presentations or screenshots
+- **Check planet sizes** - Larger planets = more stars/activity
+- **Orbital rings** indicate repository activity levels
+- **Color coding** represents primary programming language
+
+## 🔧 Configuration
+
+### Environment Variables
+
+**Required:**
+```bash
+NEXT_PUBLIC_GITHUB_USERNAME=your-username
+NEXT_PUBLIC_GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
+```
+
+**Optional:**
+```bash
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX              # Google Analytics
+NEXT_PUBLIC_PLAUSIBLE_DOMAIN=yourdomain.com  # Plausible Analytics
+```
+
+### GitHub Token Scopes
+
+**For Classic Tokens:**
+- `public_repo` - Read public repository data
+- `read:user` - Read user profile information  
+
+**For Fine-grained Tokens:**
+- Repository access: Public repositories (read)
+- Account permissions: Profile (read)
+
+## 🌟 Showcase Examples
+
+- **Live Demo**: [codegalaxy-demo.vercel.app](https://codegalaxy-demo.vercel.app)
+- **Documentation**: [Full setup guide](./DEPLOYMENT.md)
+- **Customization**: [Advanced configuration](./docs/CUSTOMIZATION.md)
+
+## 🤝 Contributing
+
+We love contributions! Here's how you can help:
+
+1. **🍴 Fork** the repository
+2. **🌿 Create** a feature branch: `git checkout -b feature/amazing-addition`
+3. **💾 Commit** your changes: `git commit -m 'Add amazing feature'`
+4. **🚀 Push** to the branch: `git push origin feature/amazing-addition`
+5. **🔄 Submit** a Pull Request
+
+### Development Setup
+
+```bash
+git clone https://github.com/JasonDoug/codegalaxy.git
+cd codegalaxy
+npm install
+npm run dev
+```
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **Three.js Community** for incredible 3D web graphics
+- **Vercel Team** for Next.js and deployment platform  
+- **GitHub** for providing the API that powers this experience
+- **React Three Fiber** for bringing React and Three.js together
+- **All Contributors** who help make this project better
+
+## 📞 Support
+
+- **🐛 Issues**: [GitHub Issues](https://github.com/JasonDoug/codegalaxy/issues)
+- **💬 Discussions**: [GitHub Discussions](https://github.com/JasonDoug/codegalaxy/discussions)  
+- **📧 Email**: [your-email@domain.com](mailto:your-email@domain.com)
+
+---
+
+<div align="center">
+
+**⭐ Star this repo if you find it useful! ⭐**
+
+Made with ❤️ by developers, for developers
+
+[🚀 Deploy Now](https://vercel.com/new/clone?repository-url=https://github.com/JasonDoug/codegalaxy) • [📖 Documentation](./docs/) • [🎮 Live Demo](https://codegalaxy-demo.vercel.app)
+
+</div>

@@ -1,7 +1,32 @@
 {
-  "name": "portfolio",
-  "version": "0.1.0",
-  "private": true,
+  "name": "codegalaxy",
+  "version": "1.0.0",
+  "description": "🌌 Revolutionary 3D Developer Portfolio Template - Transform your GitHub repositories into an interactive 3D galaxy",
+  "private": false,
+  "keywords": [
+    "portfolio",
+    "3d",
+    "three.js",
+    "nextjs",
+    "github",
+    "developer",
+    "template",
+    "react",
+    "typescript"
+  ],
+  "author": {
+    "name": "Code Galaxy Contributors",
+    "url": "https://github.com/JasonDoug/codegalaxy"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JasonDoug/codegalaxy.git"
+  },
+  "homepage": "https://github.com/JasonDoug/codegalaxy#readme",
+  "bugs": {
+    "url": "https://github.com/JasonDoug/codegalaxy/issues"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
