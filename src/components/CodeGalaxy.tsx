@@ -181,6 +181,30 @@ export function CodeGalaxy({ onRepositorySelect, onDeveloperCoreClick }: CodeGal
   const galaxyRef = useRef<Group>(null);
   const { repositories, isLoading, error, userStats, isConnected } = useGitHubData();
   
+  // Create ambient particles at component level (must be before conditional renders)
+  const ambientParticles = useMemo(() =>
+    Array.from({ length: 50 }, (_, i) => {
+      const position = [
+        (Math.random() - 0.5) * 30,
+        (Math.random() - 0.5) * 30,
+        (Math.random() - 0.5) * 30
+      ] as [number, number, number];
+      const speed = Math.random() * 2 + 0.5;
+      
+      return (
+        <Float key={i} speed={speed}>
+          <Sphere args={[0.02, 8, 8]} position={position}>
+            <meshBasicMaterial
+              color="#8b5cf6"
+              transparent
+              opacity={0.6}
+            />
+          </Sphere>
+        </Float>
+      );
+    }), []
+  );
+  
   // Use mock data when not connected, real data when connected
   const displayRepositories = isConnected ? repositories : mockRepositories;
   
@@ -339,28 +363,7 @@ export function CodeGalaxy({ onRepositorySelect, onDeveloperCoreClick }: CodeGal
       </Float>
       
       {/* Ambient particles */}
-      {useMemo(() =>
-        Array.from({ length: 50 }, (_, i) => {
-          const position = [
-            (Math.random() - 0.5) * 30,
-            (Math.random() - 0.5) * 30,
-            (Math.random() - 0.5) * 30
-          ] as [number, number, number];
-          const speed = Math.random() * 2 + 0.5;
-          
-          return (
-            <Float key={i} speed={speed}>
-              <Sphere args={[0.02, 8, 8]} position={position}>
-                <meshBasicMaterial
-                  color="#8b5cf6"
-                  transparent
-                  opacity={0.6}
-                />
-              </Sphere>
-            </Float>
-          );
-        }), []
-      )}
+      {ambientParticles}
     </group>
   );
 }
