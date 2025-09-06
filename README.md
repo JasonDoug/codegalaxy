@@ -1,7 +1,3 @@
-# 🌌 Code Galaxy - 3D Developer Portfolio Template
-
-[![Deploy Demo](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/JasonDoug/codegalaxy)
-[![Deploy Personal](https://img.shields.io/badge/Deploy%20Personal-Vercel-black)](https://vercel.com/new/clone?repository-url=https://github.com/JasonDoug/codegalaxy&env=NEXT_PUBLIC_GITHUB_TOKEN,NEXT_PUBLIC_GITHUB_USERNAME&envDescription=GitHub%20API%20credentials%20for%20your%20repository%20data&envLink=https://github.com/JasonDoug/codegalaxy#-environment-setup)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 [![Three.js](https://img.shields.io/badge/Three.js-WebGL-red)](https://threejs.org/)
@@ -118,40 +114,10 @@ transformRepositoryFor3D(repositories, index)
 
 ## 📦 Deployment
 
-### 🎮 Demo Deployment (Zero Configuration!)
-[![Deploy Demo](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/JasonDoug/codegalaxy)
-
-**🎉 TRUE one-click deployment!**
-- No environment variables required
-- No configuration needed  
-- Deploys instantly with beautiful mock data
-- Full 3D portfolio experience ready to go
-
-**Want to connect your GitHub?** Use the System Config (⚙️) in the deployed app to add your credentials through the UI!
-
-### 🔑 Personal Deployment (Your GitHub Data)
-[![Deploy Personal](https://img.shields.io/badge/Deploy%20Personal-Vercel-black)](https://vercel.com/new/clone?repository-url=https://github.com/JasonDoug/codegalaxy&env=NEXT_PUBLIC_GITHUB_TOKEN,NEXT_PUBLIC_GITHUB_USERNAME&envDescription=GitHub%20API%20credentials%20for%20your%20repository%20data&envLink=https://github.com/JasonDoug/codegalaxy#-environment-setup)
-
-1. Click "Deploy Personal" button above
-2. Connect your GitHub account
-3. Add your environment variables:
-   - `NEXT_PUBLIC_GITHUB_USERNAME` = your GitHub username
-   - `NEXT_PUBLIC_GITHUB_TOKEN` = your GitHub token ([get one here](https://github.com/settings/tokens/new?description=Portfolio%20App&scopes=public_repo))
-4. Deploy with your real repository data!
+From Vercel, Add Project, then find your cloned repo.
 
 ### 🔄 Switch from Demo to Personal Data
 
-**Already deployed the demo?** Here's how to add your GitHub data:
-
-**Option 1: Vercel Dashboard**
-1. Go to your Vercel project dashboard
-2. Navigate to Settings → Environment Variables
-3. Add these variables:
-   - `NEXT_PUBLIC_GITHUB_USERNAME` = your GitHub username
-   - `NEXT_PUBLIC_GITHUB_TOKEN` = your GitHub token
-4. Redeploy your project
-
-**Option 2: Built-in System Config**
 1. Visit your deployed demo
 2. Click the gear icon (⚙️) on the left side
 3. Click "System Config" in the menu
