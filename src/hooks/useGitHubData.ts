@@ -45,8 +45,8 @@ export function useGitHubData(): UseGitHubDataReturn {
         setError(null);
 
         // Get credentials from localStorage or environment
-        const token = localStorage.getItem('github_token') || process.env.NEXT_PUBLIC_GITHUB_TOKEN;
-        const username = localStorage.getItem('github_username') || process.env.NEXT_PUBLIC_GITHUB_USERNAME;
+        const token = sessionStorage.getItem('github_token') || process.env.NEXT_PUBLIC_GITHUB_TOKEN;
+        const username = sessionStorage.getItem('github_username') || process.env.NEXT_PUBLIC_GITHUB_USERNAME;
 
         console.log('GitHub config:', { hasToken: !!token, username });
 

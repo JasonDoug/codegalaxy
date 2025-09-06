@@ -86,8 +86,7 @@ export class GitHubAPI {
 
   private async makeRequest<T>(endpoint: string): Promise<T> {
     const headers: HeadersInit = {
-      'Accept': 'application/vnd.github.v3+json',
-      'User-Agent': 'Revolutionary-Portfolio-App'
+      'Accept': 'application/vnd.github.v3+json'
     };
 
     if (this.token) {
@@ -95,8 +94,7 @@ export class GitHubAPI {
     }
 
     const response = await fetch(`${this.baseURL}${endpoint}`, {
-      headers,
-      next: { revalidate: 300 } // Cache for 5 minutes
+      headers
     });
 
     if (!response.ok) {

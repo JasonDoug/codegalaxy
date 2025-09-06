@@ -339,25 +339,28 @@ export function CodeGalaxy({ onRepositorySelect, onDeveloperCoreClick }: CodeGal
       </Float>
       
       {/* Ambient particles */}
-      {Array.from({ length: 50 }, (_, i) => {
-        const position = [
-          (Math.random() - 0.5) * 30,
-          (Math.random() - 0.5) * 30,
-          (Math.random() - 0.5) * 30
-        ] as [number, number, number];
-        
-        return (
-          <Float key={i} speed={Math.random() * 2 + 0.5}>
-            <Sphere args={[0.02, 8, 8]} position={position}>
-              <meshBasicMaterial
-                color="#8b5cf6"
-                transparent
-                opacity={0.6}
-              />
-            </Sphere>
-          </Float>
-        );
-      })}
+      {useMemo(() =>
+        Array.from({ length: 50 }, (_, i) => {
+          const position = [
+            (Math.random() - 0.5) * 30,
+            (Math.random() - 0.5) * 30,
+            (Math.random() - 0.5) * 30
+          ] as [number, number, number];
+          const speed = Math.random() * 2 + 0.5;
+          
+          return (
+            <Float key={i} speed={speed}>
+              <Sphere args={[0.02, 8, 8]} position={position}>
+                <meshBasicMaterial
+                  color="#8b5cf6"
+                  transparent
+                  opacity={0.6}
+                />
+              </Sphere>
+            </Float>
+          );
+        }), []
+      )}
     </group>
   );
 }
