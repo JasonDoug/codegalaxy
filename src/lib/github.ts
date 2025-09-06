@@ -81,7 +81,7 @@ export class GitHubAPI {
   private token: string | null = null;
 
   constructor(token?: string) {
-    this.token = token || process.env.NEXT_PUBLIC_GITHUB_TOKEN || null;
+    this.token = token || null;
   }
 
   private async makeRequest<T>(endpoint: string): Promise<T> {

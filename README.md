@@ -1,6 +1,7 @@
 # 🌌 Code Galaxy - 3D Developer Portfolio Template
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/JasonDoug/codegalaxy&env=NEXT_PUBLIC_GITHUB_TOKEN,NEXT_PUBLIC_GITHUB_USERNAME&envDescription=GitHub%20API%20credentials%20for%20fetching%20your%20repository%20data&envLink=https://github.com/JasonDoug/codegalaxy#-environment-setup)
+[![Deploy Demo](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/JasonDoug/codegalaxy)
+[![Deploy Personal](https://img.shields.io/badge/Deploy%20Personal-Vercel-black)](https://vercel.com/new/clone?repository-url=https://github.com/JasonDoug/codegalaxy&env=NEXT_PUBLIC_GITHUB_TOKEN,NEXT_PUBLIC_GITHUB_USERNAME&envDescription=GitHub%20API%20credentials%20for%20your%20repository%20data&envLink=https://github.com/JasonDoug/codegalaxy#-environment-setup)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 [![Three.js](https://img.shields.io/badge/Three.js-WebGL-red)](https://threejs.org/)
@@ -117,13 +118,47 @@ transformRepositoryFor3D(repositories, index)
 
 ## 📦 Deployment
 
-### Vercel (Recommended)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/JasonDoug/codegalaxy)
+### 🎮 Demo Deployment (Zero Configuration!)
+[![Deploy Demo](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/JasonDoug/codegalaxy)
 
-1. Click deploy button above
+**🎉 TRUE one-click deployment!**
+- No environment variables required
+- No configuration needed  
+- Deploys instantly with beautiful mock data
+- Full 3D portfolio experience ready to go
+
+**Want to connect your GitHub?** Use the System Config (⚙️) in the deployed app to add your credentials through the UI!
+
+### 🔑 Personal Deployment (Your GitHub Data)
+[![Deploy Personal](https://img.shields.io/badge/Deploy%20Personal-Vercel-black)](https://vercel.com/new/clone?repository-url=https://github.com/JasonDoug/codegalaxy&env=NEXT_PUBLIC_GITHUB_TOKEN,NEXT_PUBLIC_GITHUB_USERNAME&envDescription=GitHub%20API%20credentials%20for%20your%20repository%20data&envLink=https://github.com/JasonDoug/codegalaxy#-environment-setup)
+
+1. Click "Deploy Personal" button above
 2. Connect your GitHub account
-3. Add environment variables
-4. Deploy instantly!
+3. Add your environment variables:
+   - `NEXT_PUBLIC_GITHUB_USERNAME` = your GitHub username
+   - `NEXT_PUBLIC_GITHUB_TOKEN` = your GitHub token ([get one here](https://github.com/settings/tokens/new?description=Portfolio%20App&scopes=public_repo))
+4. Deploy with your real repository data!
+
+### 🔄 Switch from Demo to Personal Data
+
+**Already deployed the demo?** Here's how to add your GitHub data:
+
+**Option 1: Vercel Dashboard**
+1. Go to your Vercel project dashboard
+2. Navigate to Settings → Environment Variables
+3. Add these variables:
+   - `NEXT_PUBLIC_GITHUB_USERNAME` = your GitHub username
+   - `NEXT_PUBLIC_GITHUB_TOKEN` = your GitHub token
+4. Redeploy your project
+
+**Option 2: Built-in System Config**
+1. Visit your deployed demo
+2. Click the gear icon (⚙️) on the left side
+3. Click "System Config" in the menu
+4. Enter your GitHub username and token
+5. Click "Test Connection" to verify
+6. Click "Save & Apply"
+7. Your portfolio will instantly load your real repositories!
 
 ### Other Platforms
 
@@ -278,6 +313,6 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 Made with ❤️ by developers, for developers
 
-[🚀 Deploy Now](https://vercel.com/new/clone?repository-url=https://github.com/JasonDoug/codegalaxy) • [📖 Documentation](./docs/) • [🎮 Live Demo](https://codegalaxy-demo.vercel.app)
+[🎮 Deploy Demo](https://vercel.com/new/clone?repository-url=https://github.com/JasonDoug/codegalaxy) • [🔑 Deploy Personal](https://vercel.com/new/clone?repository-url=https://github.com/JasonDoug/codegalaxy&env=NEXT_PUBLIC_GITHUB_TOKEN,NEXT_PUBLIC_GITHUB_USERNAME) • [📖 Documentation](./docs/)
 
 </div>

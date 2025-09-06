@@ -100,3 +100,17 @@ export const mockUserStats = {
     'Rust': 4200
   }
 };
+
+export const mockUserProfile = {
+  login: 'demo-developer',
+  name: 'Demo Developer',
+  bio: 'Full-stack developer passionate about 3D web experiences, machine learning, and open source',
+  avatar_url: 'https://avatars.githubusercontent.com/u/1?v=4',
+  html_url: 'https://github.com/demo-developer',
+  location: 'San Francisco, CA',
+  company: 'Code Galaxy Inc.',
+  blog: 'https://demo-developer.dev',
+  followers: 1247,
+  following: 89,
+  public_repos: 42
+};

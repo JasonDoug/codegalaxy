@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { GitHubAPI } from '@/lib/github';
+import { mockRepositories, mockUserStats, mockUserProfile } from '@/lib/mockData';
 import type { Repository } from '@/types/repository';
 
 interface UseGitHubDataReturn {
@@ -44,15 +45,19 @@ export function useGitHubData(): UseGitHubDataReturn {
         setIsLoading(true);
         setError(null);
 
-        // Get credentials from localStorage or environment
-        const token = sessionStorage.getItem('github_token') || process.env.NEXT_PUBLIC_GITHUB_TOKEN;
-        const username = sessionStorage.getItem('github_username') || process.env.NEXT_PUBLIC_GITHUB_USERNAME;
+        // Get credentials from localStorage only (no environment variables)
+        const token = sessionStorage.getItem('github_token');
+        const username = sessionStorage.getItem('github_username');
 
         console.log('GitHub config:', { hasToken: !!token, username });
 
         if (!token || !username) {
-          // No GitHub connection - set as disconnected and show demo
-          setIsConnected(false);
+          // No GitHub credentials - use mock data for demo
+          console.log('No GitHub credentials - using mock data');
+          setRepositories(mockRepositories);
+          setUserStats(mockUserStats);
+          setUserProfile(mockUserProfile);
+          setIsConnected(true); // Show as connected in demo mode
           setIsLoading(false);
           return;
         }

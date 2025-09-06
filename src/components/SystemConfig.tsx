@@ -21,8 +21,7 @@ export function SystemConfig({ isOpen, onClose }: SystemConfigProps) {
   useEffect(() => {
     if (isOpen) {
       const savedToken = sessionStorage.getItem('github_token') || '';
-      const savedUsername = sessionStorage.getItem('github_username') || 
-                           process.env.NEXT_PUBLIC_GITHUB_USERNAME || '';
+      const savedUsername = sessionStorage.getItem('github_username') || '';
       
       setGithubToken(savedToken);
       setGithubUsername(savedUsername);
